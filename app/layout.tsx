@@ -1,4 +1,4 @@
-import "./globals.css";
+import "../styles/globals.css";
 import { SessionProvider } from "next-auth/react";
 import Nav from "../components/Nav";
 
