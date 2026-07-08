@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --navy-900: #021029;
+  --gold: #c79b2b;
+}
+
+html, body, #__next {
+  height: 100%;
+}
+
+body {
+  @apply bg-[linear-gradient(180deg,#021029_0%,#05223a_60%)] text-gray-100;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
