@@ -3,8 +3,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "./auth/[...nextauth]";
 import { prisma } from "../../lib/prisma";
 import { callGemini } from "../../lib/gemini";
-import startOfDay from "date-fns/startOfDay";
-import endOfDay from "date-fns/endOfDay";
+import { startOfDay, endOfDay } from "date-fns";
 
 async function getUsageCount(userId: string) {
   const todayStart = startOfDay(new Date());
@@ -67,7 +66,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (product === "hukuk") {
     systemPrompt = `Sen AL Hukuk AI’sın. Türkiye hukukuna dair genel bilgilendirici cevaplar verirsin. Hukuki tavsiye vermezsin, resmi görüş yerine geçmez. Kullanıcıya açık ve anlaşılır bir dilde yanıt ver. Kategoriler: İş Hukuku, Aile Hukuku, İcra Hukuku, Ceza Hukuku, Trafik Hukuku, Tüketici Hukuku, Kira Hukuku.`;
   } else {
-    systemPrompt = `Sen AL Psikoloji AI’sın. Destekleyici bilgi ve öneriler sun. Terapist olmadığın, teşhis koymadığın ve yalnızca bilgi/ destek amaçlı yardımcı olduğun her yanıtta açıkça belirtilmelidir.`;
+    systemPrompt = `Sen AL Psikoloji AI’sın. Destekleyici bilgi ve öneriler sun. Terapist olmadığın, teşhis koymadığın ve yalnızca bilgi/ destek amaçlı yardımcı olduğun her yanıttı`;
   }
 
   const prompt = `${systemPrompt}\nKullanıcı: ${message}\nCevap:`;
