@@ -1,0 +1,2 @@
+# ai-hukuk
+ai-psikoloji
