@@ -1,9 +1,17 @@
-import NextAuth from "next-auth";
+import NextAuth, { type NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "../../../lib/prisma";
+import type { Session, DefaultUser } from "next-auth";
 
-export const authOptions = {
+type MySession = Session & {
+  user: Session["user"] & {
+    id: string;
+    role?: string;
+  };
+};
+
+export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
@@ -13,13 +21,14 @@ export const authOptions = {
   ],
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async session({ session, user }) {
-      // session.user.id erişimi için userId ekliyoruz
-      (session as any).user.id = user.id;
-      (session as any).user.role = (user as any).role;
-      return session;
+    async session({ session, user }: { session: Session; user: DefaultUser & { role?: string } }): Promise<MySession> {
+      const s = session as MySession;
+      // user.id may be undefined in some flows — assert it exists when you rely on it
+      if (user.id) s.user.id = user.id;
+      if (user.role) s.user.role = user.role;
+      return s;
     }
   }
 };
 
-export default NextAuth(authOptions as any);
+export default NextAuth(authOptions);
