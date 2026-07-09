@@ -1,19 +1,29 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../lib/prisma";
 
-// Güvenli promote için basit bir secret kontrolü kullanıyoruz
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+  if (req.method !== "POST") return res.status(405).end();
 
-  const { email, secret } = req.body as { email?: string; secret?: string };
-  if (!email || !secret) return res.status(400).json({ error: "email ve secret gerekli" });
+  const { email, secret } = req.body;
+  if (secret !== process.env.PROMOTE_SECRET) {
+    return res.status(401).json({ error: "Geçersiz gizli anahtar" });
+  }
 
-  if (secret !== process.env.PROMOTE_SECRET) return res.status(403).json({ error: "Yetkisiz" });
+  try {
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) return res.status(404).json({ error: "Kullanıcı bulunamadı" });
 
-  const user = await prisma.user.findUnique({ where: { email } });
-  if (!user) return res.status(404).json({ error: "Kullanıcı bulunamadı" });
+    await prisma.membership.create({
+      data: {
+        userId: user.id,
+        status: "active",
+        expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+      }
+    });
 
-  await prisma.user.update({ where: { id: user.id }, data: { role: "ADMIN" } });
-
-  res.json({ ok: true, message: `${email} kullanıcısı admin yapıldı.` });
+    res.json({ success: true, message: "Kullanıcı premium'a yükseltildi." });
+  } catch (err) {
+    console.error("Premium yükseltme hatası:", err);
+    res.status(500).json({ error: "Premium yükseltme başarısız." });
+  }
 }

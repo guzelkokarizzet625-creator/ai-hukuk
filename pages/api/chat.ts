@@ -64,9 +64,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   let systemPrompt = "";
   if (product === "hukuk") {
-    systemPrompt = `Sen AL Hukuk AI’sın. Türkiye hukukuna dair genel bilgilendirici cevaplar verirsin. Hukuki tavsiye vermezsin, resmi görüş yerine geçmez. Kullanıcıya açık ve anlaşılır bir dilde yanıt ver. Kategoriler: İş Hukuku, Aile Hukuku, İcra Hukuku, Ceza Hukuku, Trafik Hukuku, Tüketici Hukuku, Kira Hukuku.`;
+    systemPrompt = `Sen AL Hukuk AI'sın. Türkiye hukukuna dair genel bilgilendirici cevaplar verirsin. Hukuki tavsiye vermezsin, resmi görüş yerine geçmez. Kullanıcıya açık ve anlaşılır cevaplar sun.`;
   } else {
-    systemPrompt = `Sen AL Psikoloji AI’sın. Destekleyici bilgi ve öneriler sun. Terapist olmadığın, teşhis koymadığın ve yalnızca bilgi/ destek amaçlı yardımcı olduğun her yanıttı`;
+    systemPrompt = `Sen AL Psikoloji AI'sın. Destekleyici bilgi ve öneriler sun. Terapist olmadığın, teşhis koymadığın ve yalnızca bilgi/destek amaçlı yardımcı olduğun her yanıtta belirt.`;
   }
 
   const prompt = `${systemPrompt}\nKullanıcı: ${message}\nCevap:`;
