@@ -3,7 +3,8 @@ import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 
 export default function Nav() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  
   return (
     <nav className="w-full bg-[rgba(255,255,255,0.02)] border-b border-white/6">
       <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
@@ -16,7 +17,9 @@ export default function Nav() {
           <Link href="/products" className="text-sm text-gray-200 hidden sm:inline">Ürünler</Link>
           <Link href="/panel" className="text-sm text-gray-200 hidden sm:inline">Panel</Link>
 
-          {session?.user ? (
+          {status === "loading" ? (
+            <span className="text-sm text-gray-400">Yükleniyor...</span>
+          ) : session?.user ? (
             <>
               <button onClick={() => signOut()} className="text-sm text-gray-200">Çıkış</button>
             </>

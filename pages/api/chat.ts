@@ -23,7 +23,7 @@ async function getUsageCount(userId: string) {
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") return res.status(405).end();
 
-  const session = await getServerSession(req, res, authOptions as any);
+  const session = await getServerSession(req, res, authOptions);
   if (!session || !session.user?.email) return res.status(401).json({ error: "Oturum açılmamış" });
 
   const userEmail = session.user.email as string;

@@ -3,7 +3,16 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 
 export default function PanelPage() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+
+  if (status === "loading") {
+    return (
+      <div>
+        <h2 className="text-xl font-semibold">Yükleniyor...</h2>
+        <p className="text-gray-300">Lütfen bekleyin</p>
+      </div>
+    );
+  }
 
   if (!session) {
     return (
